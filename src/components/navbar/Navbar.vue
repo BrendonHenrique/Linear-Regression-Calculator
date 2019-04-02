@@ -1,33 +1,63 @@
 <template>
-  <div class="navbar navbar-light bg-light">
-    <a class="navbar-brand">
-      <a href="http://garten.com.br/">
-        <img src="./garten.png" alt="garten automação" title="Garten">
-      </a>
-    </a>
-    <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link">Calibrador Web para MedUmi e Whiitekon </a>
-        </li>
-      </ul>
+    <div id="Navbar">
+      <nav class="navbar">
+        <a class="navbar-brand" href="http://garten.com.br/">
+          <img src="../../assets/garten.png" alt="garten automação" title="Garten">
+        </a>
+        <div class="btn-group" style="right:17%;">
+          <button type="button" class="btn-lg btn-secondary dropdown-toggle"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Menu
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-right" >
+            <button type="button" class="dropdown-item" data-toggle="tooltip" data-placement="right"
+            title="Clique para gerar um código" @click="dispatchSalvar"><h3>Salvar</h3></button>
+          <button type="confirm" class="dropdown-item " data-toggle="tooltip" data-placement="right"
+            title="Clique para reiniciar a tabela" @click="dispatchReiniciar"><h3>Reiniciar</h3></button>
+          <button type="confirm" class="dropdown-item" data-toggle="tooltip" data-placement="right"
+            title="Clique para reiniciar a tabela" @click="dispatchDownload"><h3>Exportar em Csv</h3></button>
+          </div>
+        </div>
+      </nav>
     </div>
-  </div>
 </template>
 <script>
-  export default {}
 
+import 'bootstrap/dist/css/bootstrap.css'
+
+  export default {
+    data(){
+      return{
+
+      }
+    },
+    methods:{
+      dispatchSalvar() {
+        this.$emit('dispatchSalvar');
+      },
+      dispatchReiniciar(){
+        this.$emit('dispatchReiniciar');
+      },
+      dispatchDownload(){
+        this.$emit('dispatchDownload');
+      }
+
+    }
+  }
 </script>
 
 <style>
-  .navbar {
-    background: #ece9e6;
-    background: -webkit-linear-gradient(to left, #ffffff, #ece9e6);
-    background: linear-gradient(to left, #ffffff, #ece9e6);
-  }
-  img{
-    width: 80%;
-    height: auto;
-  }
 
+button , .dropdown-menu{
+  background-color:rgba(169,188,208,0.2);
+}
+h3{
+  color:grey;
+}
+
+img {
+  width: 70%;
+  height: auto;
+}
 </style>

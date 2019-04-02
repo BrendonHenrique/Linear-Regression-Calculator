@@ -13,14 +13,12 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
+    "jquery": "^3.3.1",
     "popper.js": "^1.14.7",
     "regression": "^2.0.1",
-    "toastr": "^2.1.4",
     "vue": "^2.6.10",
     "vue-router": "^2.8.1",
-    "vue-session": "^1.0.0",
-    "vue-toasted": "^1.1.26",
-    "vue-toastr": "^2.0.16"
+    "vue-toasted": "^1.1.26"
   },
   "browserslist": [
     "> 1%",

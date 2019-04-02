@@ -14,5 +14,13 @@ export const ChartScript = {
   }
 }
 
+// function getElementAtEvent(vm){
+
+//   console.log(vm);
+// }
+
+
+// export {asd}
+// import {asd} from  ChartScript
 export default ChartScript;
 

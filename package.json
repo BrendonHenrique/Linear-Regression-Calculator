@@ -12,11 +12,15 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.15",
     "chart.js": "^2.8.0",
+    "popper.js": "^1.14.7",
     "regression": "^2.0.1",
+    "toastr": "^2.1.4",
     "vue": "^2.6.10",
-    "vue-router": "^2.8.1"
+    "vue-router": "^2.8.1",
+    "vue-session": "^1.0.0",
+    "vue-toasted": "^1.1.26",
+    "vue-toastr": "^2.0.16"
   },
   "browserslist": [
     "> 1%",
@@ -31,9 +35,11 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
+    "webpack": "^3.12.0",
     "webpack-dev-server": "^2.9.1"
   }
 }

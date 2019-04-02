@@ -22,3 +22,5 @@ shows'up (x,y) values on a table
 Also are implemented using localStorage API , so you values are locally saved on yours browser
 it means that you can't lose your datas unless you close the broswer.
 Charts are created using chart.js API, the app  are created for Garten automation industries.
+
+![Alt text](https://raw.githubusercontent.com/BrendonHenrique/Linear-regression-Single-page-app/master/Peek%2002-04-2019%2002-09.gif)

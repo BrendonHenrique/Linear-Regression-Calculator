@@ -1,6 +1,8 @@
 <template>
   <div id="corpo">
-    <router-view/>
+    <div class="container">
+      <router-view/>
+    </div>
   </div>
 </template>
 

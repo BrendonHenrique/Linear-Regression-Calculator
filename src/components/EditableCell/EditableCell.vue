@@ -8,8 +8,8 @@
     </div>
     <div v-else>
       <span class="editContent" @click="edit">
-        <span v-if="content"><h1>{{content}}</h1></span>
-        <i v-else><h1>0</h1></i>
+        <span v-if="content"><h2>{{content}}</h2></span>
+        <i v-else><h2>0</h2></i>
       </span>
       <slot/>
     </div>
@@ -54,7 +54,5 @@
     top: 50%;
     transform: translateY(-50%);
   }
-  h1{
-    color:grey;
-  }
+
 </style>

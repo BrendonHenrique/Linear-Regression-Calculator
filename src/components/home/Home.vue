@@ -1,31 +1,32 @@
 <template>
+  <!-- Para adicionar icones <font-awesome-icon icon="coffee" /> -->
   <div id="app">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <!-- Navbar com logo da Garten -->
-    <mineNavbar v-on:dispatchSalvar="salvarPontos"
-                v-on:dispatchReiniciar="reiniciar"
-                v-on:dispatchDownload="download">
-    </mineNavbar>
-
-    <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
     <div class="container">
       <div class="row">
+        <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
+          v-on:dispatchDownload="download">
+        </mineNavbar>
+      </div>
+      <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
+      <div class="row">
         <!--  CHARTS  JS  -->
-        <div class="col-xs-36 col-sm-24 col-md-18 col-lg-10">
+        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10" >
           <canvas id="myChart"></canvas>
         </div>
       </div>
       <div class="row">
         <!-- painel da formula e painel de entrada de valores na função   -->
-        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8">
-          <div class="card border-primary mb-4">
+        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
+          <div class="card border-secondary mb-4 ">
             <div class="card-header">
-              <h2>{{formula | formatoPadrao}}</h2>
+              <h3>{{formula | formatoPadrao}}</h3>
               <div style="left:19px">
-                <h2> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" maxlength='6'
-                    style="width: 10%;"></h2>
+                <h3> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" maxlength='6'
+                    style="width: 10%;"></h3>
               </div>
-              <h2>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h2>
+              <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
             </div>
             <div class="card-body">
               <!-- Tabela de amostras Garten X Laboratório -->
@@ -60,32 +61,41 @@
         </div>
         <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
 
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-          <div id="painelAmostras" class="card border-primary mb-4">
-            <div class="card-header">
-              <h2>Adicionar amostra</h2>
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" style="top: 6rem;">
+          <div id="painelAmostras" class="card border-secondary mb-4">
+            <div class="card-header border-secondary">
+              <h3>Adicionar amostra</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body border-secondary">
               <div class="form-group">
-                <label for="form-control">
-                  <h2>X: Garten:</h2>
+
+
+                <div class="inputX">
+                  <i class="icon">
+                    <font-awesome-icon icon="edit"/>
+                  </i>
+                  <input class="form-control" id="input1" type="number" step="any" autocomplete="off" v-model="amostra.x"
+                    @keyup.enter="insert"
+                    maxlength='6'
+                    style="width: 30%;"
+                    required/>
+                </div>
+
+                <label for="input2">
+                  <input class="form-control" id="input2" type="number" step="any" autocomplete="off" v-model="amostra.y"
+                  @keyup.enter="insert"
+                  maxlength='6'
+                  style="width: 55%;"
+                  required/>
                 </label>
-                <input class="form-control" id="input1" type="number" step="any" autocomplete="off" v-model="amostra.x"
-                  @keyup.enter="insert" required>
-                <label for="lab">
-                  <h2>Y: Laboratório:</h2>
-                </label>
-                <input class="form-control" id="input2" type="number" step="any" name="lab" autocomplete="off"
-                  v-model="amostra.y" @keyup.enter="insert" required />
+
               </div>
-              <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="right"
-                title="Clique para adicionar amostra" @click="insert()">
-                <h3>Adicionar</h3>
+              <button type="button" class="btn btn-outline-dark" @click="insert()">
+                <h4>Adicionar</h4>
               </button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -300,7 +310,7 @@
               label: "Gráfico de amostras",
               backgroundColor: '#8E4A49',
               borderColor: '#8E4A49',
-              data: this.valuesHabilitados
+              data: this.valuesHabilitadoschart
             }, {
               type: "line",
               label: "Linha de tendência",
@@ -351,7 +361,7 @@
     filters: {
       // o retorno de calcular() é do tipo float , sem tratamento , pra isso uso esse filtro redutor de string
       redutor: function (value) {
-        if(isNaN(value)){
+        if (isNaN(value)) {
           return '0'
         }
         value = value.toString();
@@ -365,28 +375,32 @@
 </script>
 <style>
   /* Template do chart quebra em x,y  onde x < 360 */
-  .card{
-    background-color:rgba(169,188,208,0.2); font-color:rgba(255,255,255)
-  }
-  body {
-    background: #1B1B1E;
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+  .inputX{
+    position:relative;
   }
 
-  h1,h2 {
-    color: grey;
+  .inputX .icon{
+    position:absolute;
+    padding:10px;
+    pointer-events: none;
   }
-  #painelAmostras{
+  .inputX .icon{ padding-left:0px;}
+  .inputX .icon{ padding-right:0px;}
+
+
+  .chart{
+    top: 4rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  #painelAmostras {
     position: sticky;
     top: 1rem;
 
-  }
-
-  .container {
-    display: inline-block;
-    position: absolute;
-    z-index: 100;
-    width: 100%;
-    height: 100vh;
   }
 </style>

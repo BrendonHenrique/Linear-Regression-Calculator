@@ -12,7 +12,7 @@
       <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
       <div class="row">
         <!--  CHARTS  JS  -->
-        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10" >
+        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10">
           <canvas id="myChart"></canvas>
         </div>
       </div>
@@ -20,7 +20,7 @@
         <!-- painel da formula e painel de entrada de valores na função   -->
         <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
           <div class="card border-secondary mb-4 ">
-            <div class="card-header">
+            <div class="card card-header">
               <h3>{{formula | formatoPadrao}}</h3>
               <div style="left:19px">
                 <h3> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" maxlength='6'
@@ -28,7 +28,7 @@
               </div>
               <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
             </div>
-            <div class="card-body">
+            <div class="card card-body">
               <!-- Tabela de amostras Garten X Laboratório -->
               <table class="table">
                 <thead>
@@ -63,41 +63,34 @@
 
         <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" style="top: 6rem;">
           <div id="painelAmostras" class="card border-secondary mb-4">
-            <div class="card-header border-secondary">
+            <div class="card card-header border-secondary">
               <h3>Adicionar amostra</h3>
             </div>
             <div class="card-body border-secondary">
               <div class="form-group">
+                <form>
+                  <label for="input1"><h3>X: Garten</h3>
+                    <input class="form-control" id="input1" type="number" step="any" autocomplete="off"
+                      v-model="amostra.x" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
+                  </label>
 
+                  <hr>
+                  <label for="input2"> <h3>Y: Laboratório</h3>
+                    <input class="form-control" id="input2" type="number" step="any" autocomplete="off"
+                      v-model="amostra.y" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
+                  </label>
 
-                <div class="inputX">
-                  <i class="icon">
-                    <font-awesome-icon icon="edit"/>
-                  </i>
-                  <input class="form-control" id="input1" type="number" step="any" autocomplete="off" v-model="amostra.x"
-                    @keyup.enter="insert"
-                    maxlength='6'
-                    style="width: 30%;"
-                    required/>
-                </div>
-
-                <label for="input2">
-                  <input class="form-control" id="input2" type="number" step="any" autocomplete="off" v-model="amostra.y"
-                  @keyup.enter="insert"
-                  maxlength='6'
-                  style="width: 55%;"
-                  required/>
-                </label>
-
+                </form>
               </div>
-              <button type="button" class="btn btn-outline-dark" @click="insert()">
-                <h4>Adicionar</h4>
-              </button>
             </div>
+            <button type="button" class="btn btn-outline-dark" @click="insert()">
+              <h4>Adicionar</h4>
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -376,21 +369,12 @@
 <style>
   /* Template do chart quebra em x,y  onde x < 360 */
 
+  .card {
+    background-color: white;
 
-  .inputX{
-    position:relative;
   }
 
-  .inputX .icon{
-    position:absolute;
-    padding:10px;
-    pointer-events: none;
-  }
-  .inputX .icon{ padding-left:0px;}
-  .inputX .icon{ padding-right:0px;}
-
-
-  .chart{
+  .chart {
     top: 4rem;
     display: block;
     margin-left: auto;

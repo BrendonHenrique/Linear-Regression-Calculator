@@ -1,8 +1,9 @@
 <template>
-  <!-- Para adicionar icones <font-awesome-icon icon="coffee" /> -->
+  <!-- Enviar formula em csv -->
   <div id="app">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <!-- Navbar com logo da Garten -->
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta charset="UTF-8">
+
     <div class="container">
       <div class="row">
         <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
@@ -16,18 +17,60 @@
           <canvas id="myChart"></canvas>
         </div>
       </div>
+      <tooltips />
+
       <div class="row">
         <!-- painel da formula e painel de entrada de valores na função   -->
         <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
-          <div class="card border-secondary mb-4 ">
-            <div class="card card-header">
-              <h3>{{formula | formatoPadrao}}</h3>
-              <div style="left:19px">
-                <h3> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" maxlength='6'
-                    style="width: 10%;"></h3>
+
+          <div class="card  mb-4 ">
+
+            <div class="row" id="InfosTabela">
+              <div class="col-lg-6">
+                <div class="card card-header">
+                  <h3>{{formula | formatoPadrao}}</h3>
+                  <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
+                  <div style="left:19px">
+                    <h3> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
+                        maxlength='6' style="width: 50%;"></h3>
+                  </div>
+                </div>
               </div>
-              <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
+
+              <div class="col-lg-6">
+                <div class="card card-header">
+                  <div class="container">
+                    <div class="row">
+                      <h3>
+                        Calibrado ?
+                        <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
+
+                        <label for="Sim">Sim</label>
+
+                        <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
+
+                        <label for="Nao">Não</label>
+                      </h3>
+                    </div>
+                    <div v-if="booleanCalibrado == 'sim'">
+                      <div class="row" style="height: 5rem;">
+                        <h3>
+                          <label for="M">(m) </label>
+                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' style="width: 50%;" v-model="calibradoM"
+                            checked>
+                          <br>
+                          <label for="M">(b) </label>
+                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' v-model="calibradoB"
+                            style="margin-left:0.5rem;width: 50%;">
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
+
             <div class="card card-body">
               <!-- Tabela de amostras Garten X Laboratório -->
               <table class="table">
@@ -61,21 +104,23 @@
         </div>
         <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
 
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" style="top: 6rem;">
-          <div id="painelAmostras" class="card border-secondary mb-4">
-            <div class="card card-header border-secondary">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 " style="top: 6rem;">
+          <div id="painelAmostras" class="card mb-4 ">
+            <div class="card card-header ">
               <h3>Adicionar amostra</h3>
             </div>
-            <div class="card-body border-secondary">
+            <div class="card-body">
               <div class="form-group">
                 <form>
-                  <label for="input1"><h3>X: Garten</h3>
+                  <label for="input1">
+                    <h3>X: Garten</h3>
                     <input class="form-control" id="input1" type="number" step="any" autocomplete="off"
                       v-model="amostra.x" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
                   </label>
 
                   <hr>
-                  <label for="input2"> <h3>Y: Laboratório</h3>
+                  <label for="input2">
+                    <h3>Y: Laboratório</h3>
                     <input class="form-control" id="input2" type="number" step="any" autocomplete="off"
                       v-model="amostra.y" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
                   </label>
@@ -86,11 +131,16 @@
             <button type="button" class="btn btn-outline-dark" @click="insert()">
               <h4>Adicionar</h4>
             </button>
+            <button>
+              click me
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <i v-if="showLoader" style="margin-left:100%;">
+      <b-spiner />
+    </i>
   </div>
 </template>
 <script>
@@ -103,6 +153,9 @@
   import ChartScript from '../../utils/Chart/ChartScript.js';
   import Calculadora from '../../utils/CalculadoraDeRegressao/Calculadora.js'
   import Conversor from '../../utils/Conversor/Conversor.js'
+  import BSpinner from 'bootstrap-vue/es/components/spinner/spinner'
+  import vfs from '../../utils/pdfMaker/vfs_fonts.js';
+
 
   Vue.use(Toasted);
   var myChart = null;
@@ -138,7 +191,11 @@
         resultadoDaFormula: 0.0,
         gradiente: 0.0,
         interceptador: 0.0,
-        resultadoDaExpressao: 0.0
+        resultadoDaExpressao: 0.0,
+        showLoader: false,
+        booleanCalibrado: '',
+        calibradoM:1,
+        calibradoB:0
       }
     },
     mounted() {
@@ -178,13 +235,14 @@
         //Linhas
         var headers = {
           x: 'Garten',
-          y: 'Laboratorio', // remove commas to avoid errors
+          y: 'Laboratório',
+          formula: 'Formula : ' + this.formula
         };
 
         //Colunas
         var itemsNotFormatted = [{
           x: '',
-          y: '',
+          y: ''
         }];
         itemsNotFormatted.push(...this.values);
         console.log(itemsNotFormatted);
@@ -204,20 +262,20 @@
       toastIt(vm, choice) {
         if (choice == 'info') {
           let toast = vm.$toasted.info("Bem vindo(a) !!", {
-            theme: "outline",
-            position: "bottom-right",
+            theme: "bubble",
+            position: "top-right",
             duration: 5000
           });
         } else if (choice == 'success') {
           let toast = vm.$toasted.success("Amostra salva com sucesso !!", {
-            theme: "outline",
-            position: "bottom-right",
+            theme: "bubble",
+            position: "top-right",
             duration: 5000
           });
         } else if (choice == 'error') {
           let toast = vm.$toasted.error("Não foi possível salvar, tente novamente !!", {
-            theme: "outline",
-            position: "bottom-right",
+            theme: "bubble",
+            position: "top-right",
             duration: 5000
           });
         }
@@ -237,6 +295,8 @@
       post() {
         // let url = `http://10.0.0.110:4567/api/sketch/${this.$route.params.hash}`;
         let url = `http://localhost:8080/api/sketch/${this.$route.params.hash}`
+        this.showLoader = true;
+
         axios.post(url, JSON.smyChart
           .then(response => {
             setTimeout(() => {
@@ -257,17 +317,23 @@
               this.toastIt(this, 'error');
             }
           )
+          .finally(
+            loader => {
+              this.showLoader = false;
+            }
+          )
         )
       },
       salvarPontos() {
         let url = `http://10.0.0.110:4567/api/sketch`;
         // let url = 'http://localhost:8080/api/sketch'
-
+        this.showLoader = true;
         if (this.$route.params.hash) {
           this.hashCode = this.$route.params.hash;
           this.post();
         } else {
           axios.get(url).then(response => {
+
               this.hashCode = this.$route.params.hash = response.data;
               this.post();
             })
@@ -276,6 +342,9 @@
                 this.toastIt(this, 'error');
               }
             )
+            .finally(loader => {
+              this.showLoader = false;
+            })
         }
       },
       valorNovoX(id, novoValor) {
@@ -342,6 +411,7 @@
     components: {
       'mineNavbar': Navbar,
       'EditableCell': EditableCell,
+      'b-spiner': BSpinner
     },
     computed: {
       valuesHabilitados() {
@@ -368,10 +438,17 @@
 </script>
 <style>
   /* Template do chart quebra em x,y  onde x < 360 */
+  #InfosTabela {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+  }
 
   .card {
     background-color: white;
-
   }
 
   .chart {

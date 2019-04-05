@@ -1,25 +1,34 @@
 <template>
-  <div id="Navbar">
-    <nav class="navbar navbar-expand-lg ">
-      <a href='#' @click.prevent.stop="dispatchSalvar">
-        <span>
-          <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" style="margin-top:0rem;" />
-        </span>
-      </a>
-      <a href='#' @click.prevent.stop="dispatchReiniciar">
-        <span>
-          <font-awesome-icon icon="sync" class="fa-2x" style="margin-top:0rem;" />
-        </span>
-      </a>
-      <a href='#' @click.prevent.stop="dispatchDownload">
-        <span>
-          <font-awesome-icon icon="file-csv" class="fa-2x" style="margin-top:0rem;" />
-        </span>
-      </a>
-    </nav>
+  <div class="wrapper">
+    <div class="row">
+      <div id="logo">
+        <img src="../../assets/garten.png" alt="">
+      </div>
+      <div id="Navbar">
+        <nav class="navbar navbar-expand-lg ">
+          <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
+            <span>
+              <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" style="margin-top:0rem;" />
+            </span>
+          </a>
+          <a href='#' @click.prevent.stop="dispatchReiniciar" v-b-tooltip.hover title="Reiniciar as amostras">
+            <span>
+              <font-awesome-icon icon="sync" class="fa-2x" style="margin-top:0rem;" />
+            </span>
+          </a>
+          <a href='#' @click.prevent.stop="dispatchDownload" v-b-tooltip.hover title="Fazer Download em formato CSV">
+            <span>
+              <font-awesome-icon icon="file-csv" class="fa-2x" style="margin-top:0rem;" />
+            </span>
+          </a>
+        </nav>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+  import BootstrapVue from 'bootstrap-vue'
+
   export default {
     data() {
       return {}
@@ -37,11 +46,17 @@
       printPage() {
         this.$emit('dispatchDownload');
       }
-    }
+    },
+
   }
 </script>
 
 <style>
+  #logo{
+    margin-right:13rem;
+  }
+
+
   @import url(http://weloveiconfonts.com/api/?family=entypo);
 
   * {

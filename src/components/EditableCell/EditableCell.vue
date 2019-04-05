@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <span class="editContent" @click="edit">
-        <span v-if="content"><h2>{{content}}</h2></span>
+        <span v-if="content"><h3>{{content}}</h3></span>
         <i v-else><h2>0</h2></i>
       </span>
       <slot/>

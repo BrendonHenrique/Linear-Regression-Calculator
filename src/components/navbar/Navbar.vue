@@ -1,46 +1,36 @@
 <template>
-  <div class="wrapper">
-    <div class="row">
-      <div id="logo">
-        <img src="../../assets/garten.png" alt="">
-      </div>
-      <div id="Navbar" :style="transtionToLoader">
-        <nav class="navbar navbar-expand-lg ">
-          <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
-            <span>
-              <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" style="margin-top:0rem;" />
-            </span>
-          </a>
-          <a href='#' @click.prevent.stop="dispatchReiniciar" v-b-tooltip.hover title="Reiniciar as amostras">
-            <span>
-              <font-awesome-icon icon="sync" class="fa-2x" style="margin-top:0rem;" />
-            </span>
-          </a>
-          <a href='#' @click.prevent.stop="dispatchDownload" v-b-tooltip.hover title="Fazer Download em formato CSV">
-            <span>
-              <font-awesome-icon icon="file-csv" class="fa-2x" style="margin-top:0rem;" />
-            </span>
-          </a>
-          <a href='#' @click.prevent.stop="dispatchDownloadPDF" v-b-tooltip.hover title="Fazer Download em formato PDF">
-            <span>
-              <font-awesome-icon icon="file-pdf" class="fa-2x" style="margin-top:0rem;" />
-            </span>
-          </a>
-
-        </nav>
-      </div>
+  <div class="row">
+    <div id="logo">
+      <img src="../../assets/garten.png" style="width:18rem;">
+    </div>
+    <div id="Navbar" :style="transtionToLoader">
+      <nav class="navbar navbar-expand-lg " style="margin-left:-13rem;">
+        <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
+          <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" />
+        </a>
+        <a href='#' @click.prevent.stop="dispatchReiniciar" v-b-tooltip.hover title="Reiniciar as amostras">
+          <font-awesome-icon icon="sync" class="fa-2x" />
+        </a>
+        <a href='#' @click.prevent.stop="dispatchDownload" v-b-tooltip.hover title="Fazer Download em formato CSV">
+          <font-awesome-icon icon="file-csv" class="fa-2x" />
+        </a>
+        <a href='#' @click.prevent.stop="dispatchDownloadPDF" v-b-tooltip.hover title="Fazer Download em formato PDF">
+          <font-awesome-icon icon="file-pdf" class="fa-2x" />
+        </a>
+      </nav>
     </div>
   </div>
 </template>
 <script>
+  import BSpinner from 'bootstrap-vue/es/components/spinner/spinner'
   import BootstrapVue from 'bootstrap-vue'
 
   export default {
     data() {
       return {
-        transtionToLoader:{
-          'transition: 1s' : true,
-          'margin-top: -100px' : true,
+        transtionToLoader: {
+          'transition: 1s': true,
+          'margin-top: -100px': true,
           'transition-timing-function : cubic-bezier(0.22, 0.61, 0.36, 1)': true
         }
       }
@@ -59,18 +49,13 @@
         this.$emit('dispatchDownloadPDF');
       }
     },
-
+    components: {
+      'b-spinner': BSpinner,
+    }
   }
 </script>
 
 <style>
-  #logo{
-    margin-right:13rem;
-  }
-
-
-  @import url(http://weloveiconfonts.com/api/?family=entypo);
-
   * {
     -webkit-font-smoothing: antialiased;
     -webkit-box-sizing: border-box;
@@ -80,31 +65,25 @@
   }
 
   a {
-    margin-top: -20px;
-    padding-bottom: 40px;
-  }
-
-  body {
-    padding: 0;
-    height: 80%;
-    background: white;
+    margin-top: -1rem;
+    padding-bottom: 3rem;
   }
 
 
   #Navbar {
     white-space: nowrap;
-    height: 0px;
-    width: 260px;
-    margin: 30px auto;
+    height: 0rem;
+    width: 20rem;
+    margin: 2.3rem auto;
   }
 
   #Navbar a {
     background-image: linear-gradient(#485258, #30383c);
-    width: 66px;
-    height: 38px;
+    width: 5rem;
+    height: 3rem;
     text-decoration: none;
-    padding-top: 9px;
-    outline-width: 0px;
+    padding-top: 0.6rem;
+    outline-width: 0rem;
     z-index: 990;
     color: white;
     text-align: center;
@@ -114,39 +93,40 @@
 
   #Navbar a:not(.active) {
 
-    box-shadow:
-      inset 0 1px 1px rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0px rgba(0, 0, 0, 0.2),
-      0 9px 16px 0 rgba(0, 0, 0, 0.3),
-      0 4px 3px 0 rgba(0, 0, 0, 0.3),
-      0 0 0 1px rgba(0, 0, 0, .2);
 
-    text-shadow: 0 0 21px rgba(223, 206, 228, 0.5), 0 -1px 0 #311d47;
+    box-shadow:
+      inset 0 0.07rem 0.07rem rgba(255, 255, 255, 0.1),
+      inset 0 -0.07rem 0 rgba(0, 0, 0, 0.2),
+      0 0.7rem 1.23rem 0 rgba(0, 0, 0, 0.3),
+      0 0.3rem 0.23rem 0 rgba(0, 0, 0, 0.3),
+      0 0 0 0.07rem rgba(0, 0, 0, .2);
+
+    text-shadow: 0 0 1.6rem rgba(223, 206, 228, 0.5), 0 -0.07rem 0 #311d47;
   }
 
   #Navbar a:not(.active):hover,
   #Navbar a:not(.active):focus {
     color: #86c6ef;
-    text-shadow: 0 0 2px rgba(255, 255, 255, .2);
+    text-shadow: 0 0 0.15rem rgba(255, 255, 255, .2);
   }
 
   #Navbar a:not(.active):active {
     color: #86c6ef !important;
     background: #313335;
-    text-shadow: 0 0 21px #618398, 0 0 15px #618398, 0 0 2px #fff, 0 0 1px #000, 0 0 5px #618398;
+    text-shadow: 0 0 0 1.6rem #618398, 0 0 1.15rem #618398, 0 0 0.14rem #fff, 0 0 0.07rem #000, 0 0 0.4rem #618398;
     color: #86c6ef;
   }
 
   #Navbar a.active,
   #Navbar a:active {
     box-shadow:
-      0 9px 16px 0 rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(0, 0, 0, .6),
-      0 2px 1px 0 rgba(255, 255, 255, 0.05),
-      inset 0 0 4px 3px rgba(0, 0, 0, 0.2),
-      inset 0 0 10px rgba(0, 0, 0, .5);
+      0 0.7rem 1.2rem 0 rgba(0, 0, 0, 0.1),
+      0 0 0 0.07rem rgba(0, 0, 0, .6),
+      0 0.15rem 0.07rem 0 rgba(255, 255, 255, 0.05),
+      inset 0 0 0.3rem 0.31rem rgba(0, 0, 0, 0.2),
+      inset 0 0 0.76rem rgba(0, 0, 0, .5);
     background: #313335;
-    text-shadow: 0 0 5px #618398, 0 0 21px #618398, 0 0 15px #618398, 0 0 2px #fff, 0 0 1px #000, 0 0 5px #618398, 0 -1px 0 #fff, 0 1px 0 #000;
+    text-shadow: 0 0 0.38rem #618398, 0 0 1.61rem #618398, 0 0 1.15rem #618398, 0 0 0.15rem #fff, 0 0 0.07rem #000, 0 0 0.38rem #618398, 0 -0.07rem 0 #fff, 0 0.07rem 0 #000;
     color: #86c6ef;
   }
 
@@ -157,11 +137,11 @@
     /* W3C */
     display: block;
     Navbar: "";
-    width: 1px;
-    height: 36px;
-    top: 1px;
-    left: -2px;
-    box-shadow: 0px 0 0px rgba(134, 199, 239, .2), 0px 0 1px rgba(255, 255, 255, .2), 0px 0 5px rgba(255, 255, 255, .4);
+    width: 0.07rem;
+    height: 3rem;
+    top: 0.07rem;
+    left: -0.14rem;
+    box-shadow: 0 0 0 rgba(134, 199, 239, .2), 0 0 0.07rem rgba(255, 255, 255, .2), 0 0 0.38rem rgba(255, 255, 255, .4);
   }
 
   #Navbar a.active:after,
@@ -169,13 +149,13 @@
     position: absolute;
     display: block;
     Navbar: "";
-    width: 1px;
-    height: 36px;
-    top: 1px;
-    right: -2px;
+    width: 0.07rem;
+    height: 13rem;
+    top: 0.07rem;
+    right: -0.14rem;
     background: linear-gradient(to bottom, #485258 0%, #485258 15%, #86c6ef 50%, #86c6ef 50%, #86c6ef 51%, #30383c 85%, #30383c 100%);
     /* W3C */
-    box-shadow: 0px 0 0px rgba(134, 199, 239, .2), 0px 0 1px rgba(255, 255, 255, .2), 0px 0 5px rgba(255, 255, 255, .4);
+    box-shadow: 0 0 0 rgba(134, 199, 239, .2), 0 0 0.07rem rgba(255, 255, 255, .2), 0 0 0.38rem rgba(255, 255, 255, .4);
   }
 
   #Navbar a:last-child:active:after {
@@ -197,58 +177,58 @@
   }
 
   #Navbar a:last-of-type {
-    -webkit-border-radius: 0 7px 7px 0;
-    -moz-border-radius: 0 7px 7px 0;
-    -ms-border-radius: 0 7px 7px 0;
-    -o-border-radius: 0 7px 7px 0;
-    border-radius: 0 7px 7px 0;
+    -webkit-border-radius: 0 0.53rem 0.53rem 0;
+    -moz-border-radius: 0 0.53rem 0.53rem 0;
+    -ms-border-radius: 0 0.53rem 0.53rem 0;
+    -o-border-radius: 0 0.53rem 0.53rem 0;
+    border-radius: 0 0.53rem 0.53rem 0;
   }
 
   #Navbar a:first-of-type {
-    -webkit-border-radius: 7px 0 0 7px;
-    -moz-border-radius: 7px 0 0 7px;
-    -ms-border-radius: 7px 0 0 7px;
-    -o-border-radius: 7px 0 0 7px;
-    border-radius: 7px 0 0 7px;
+    -webkit-border-radius: 0.53rem 0 0 0.53rem;
+    -moz-border-radius: 0.53rem 0 0 0.53rem;
+    -ms-border-radius: 0.53rem 0 0 0.53rem;
+    -o-border-radius: 0.53rem 0 0 0.53rem;
+    border-radius: 0.53rem 0 0 0.53rem;
     left: 0;
   }
 
   #Navbar a:nth-of-type(2) {
-    left: 67px
+    left: 5.15rem
   }
 
   #Navbar a:nth-of-type(3) {
-    left: 134px
+    left: 10.3rem
   }
 
   #Navbar a:nth-of-type(4) {
-    left: 200px
+    left: 15.38rem
   }
 
   #Navbar a:nth-of-type(5) {
-    left: 267px
+    left: 20.53rem
   }
 
   #Navbar a:nth-of-type(6) {
-    left: 255px
+    left: 19.61rem
   }
 
   #Navbar a:nth-of-type(7) {
-    left: 306px
+    left: 23.53rem
   }
 
   #Navbar a:nth-of-type(8) {
-    left: 357px
+    left: 27.46rem
   }
 
   #Navbar a i:before {
-    margin-left: 2px;
-    font-size: 22px;
+    margin-left: 0.14rem;
+    font-size: 1.69rem;
   }
 
   a span svg {
-    width: 18px;
+    width: 1.38rem;
     stroke-width: 1.5;
-    margin-top: -2px;
+    margin-top: -0.14rem;
   }
 </style>

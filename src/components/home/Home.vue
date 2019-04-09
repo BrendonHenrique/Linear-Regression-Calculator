@@ -2,35 +2,21 @@
   <!-- Enviar formula em csv -->
   <div id="app">
     <meta charset="UTF-8">
+      <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar" v-on:dispatchDownload="download"
+        v-on:dispatchDownloadPDF="ExportarPDF">
+      </mineNavbar><br><br>
     <div class="container">
-      <div class="row">
-        <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
-          v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF">
-        </mineNavbar>
-      </div>
       <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
       <div class="row">
         <!--  CHARTS  JS  -->
-        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10">
+        <div class="col-lg-12">
           <canvas id="myChart"></canvas>
         </div>
       </div>
-      <!-- Loader para carregamento das operações -->
-      <div id="loader" class="row">
-        <div class="col-lg-2">
-          <transition name="fade">
-            <i v-if="showLoader">
-              <b-spinner type="grow" style="margin-left:45rem; margin-top:45%;"></b-spinner>
-            </i>
-            <i v-else>
-              <p style="margin-top:62%;"></p>
-            </i>
-          </transition>
-        </div>
-      </div>
+
       <div class="row">
         <!-- painel da formula e painel de entrada de valores na função   -->
-        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
+        <div class="col-lg-8" style="top: 6rem;">
           <div class="card  mb-4 ">
             <div class="row" id="InfosTabela">
               <div class="col-lg-6">
@@ -38,8 +24,12 @@
                   <h3>{{formula | formatoPadrao}}</h3>
                   <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
                   <div style="left:19px">
-                    <h3> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
-                        maxlength='6' style="width: 50%;"></h3>
+                    <h3>
+                      x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
+                        style="width: 50%;"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        maxlength="6">
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -109,7 +99,7 @@
           </div>
         </div>
         <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 " style="top: 6rem;">
+        <div class="col-lg-4 " style="top: 6rem;">
           <div id="painelAmostras" class="card mb-4 ">
             <div class="card card-header ">
               <h3>Adicionar amostra</h3>
@@ -147,7 +137,6 @@
   import Toasted from 'vue-toasted';
   import BootstrapVue from 'bootstrap-vue'
   import jsPDF from 'jspdf';
-  import BSpinner from 'bootstrap-vue/es/components/spinner/spinner'
   import Navbar from '../navbar/Navbar.vue';
   import EditableCell from '../EditableCell/EditableCell.vue';
   import ChartScript from '../../utils/Chart/ChartScript.js';
@@ -218,6 +207,7 @@
       }
       window.myChart = myChart
       this.toastIt(this, 'info');
+      document.body.style.zoom = 0.9;
     },
     updated() {
       atualizaGrafico(this, myChart);
@@ -226,17 +216,29 @@
       values() {
         let regressao = Calculadora(this);
         localStorage.setItem("valuesDB", JSON.stringify(this.values));
+      },
+      booleanCalibrado() {
+        if (this.booleanCalibrado == 'nao') {
+          this.calibradoM = 1;
+          this.calibradoB = 0;
+        }
       }
     },
     methods: {
-      getData(){
+      getData() {
         let data = new Date(),
           dia = data.getDate().toString(),
           diaF = (dia.length == 1) ? '0' + dia : dia,
           mes = (data.getMonth() + 1).toString(),
           mesF = (mes.length == 1) ? '0' + mes : mes,
           anoF = data.getFullYear();
-        return  diaF + "-" + mesF + "-" + anoF;
+        return diaF + "-" + mesF + "-" + anoF;
+      },
+       getHoras() {
+        let data = new Date();
+        let hora =  data.getHours();
+        let minutos =  data.getMinutes();
+        return hora + ":" + minutos ;
       },
 
       // Fazer download em PDF
@@ -244,14 +246,19 @@
         let doc = new jsPDF();
 
         // Desenhando tabelas M/B
-        doc.rect(140, 30, 50, 10)
-        doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 38);
+        doc.rect(140, 20, 65, 10)
+        doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 28);
+        doc.rect(140, 30, 65, 20)
+        doc.text('m: ', 142, 38)
+        doc.text('b: ', 142, 48)
+        doc.text(`${this.calibradoM}`, 160, 38)
+        doc.text(`${this.calibradoB}`, 160, 48)
 
-        doc.rect(140, 40, 50, 40)
-        doc.text('m: ', 150, 50)
-        doc.text('b: ', 150, 70)
-        doc.text(`${this.calibradoM}`, 160, 50)
-        doc.text(`${this.calibradoB}`, 160, 70)
+        // Desenhando tabela com horário e data
+        doc.rect(140, 30, 65, 60)
+        doc.text(`Data: ${this.getData()} `, 142, 60)
+        doc.text(`Horario: ${this.getHoras()} `, 142, 70)
+        doc.text('Operador:  ', 142, 80)
 
         // Header Garten / Laboratório
         doc.rect(20, 20, 100, 10)
@@ -265,7 +272,7 @@
         let contadorTexto = 47;
         let contadorTabela = 40;
 
-        //Corpo - Preencher X
+        //Corpo - Preencher Tabela
         this.values.forEach(element => {
           doc.text(`${element.x}`, 40, contadorTexto)
           doc.rect(20, contadorTabela, 50, 10)
@@ -278,10 +285,8 @@
         });
 
         // Gravador
-        let data = this.getData();
-        doc.save(`${data}.pdf`);
+        doc.save(`${this.getData()}.pdf`);
       },
-
 
       // Fazer download em CSV
       download: function (event) {
@@ -305,7 +310,6 @@
             y: item.y
           });
         });
-
         // Gravador
         let fileTitle = this.getData();
         Conversor.exportCSVFile(headers, itemsFormatted, fileTitle);
@@ -468,8 +472,7 @@
     },
     components: {
       'mineNavbar': Navbar,
-      'EditableCell': EditableCell,
-      'b-spinner': BSpinner
+      'EditableCell': EditableCell
     },
     computed: {
       valuesHabilitados() {
@@ -485,9 +488,10 @@
         if (isNaN(value)) {
           return '0'
         }
-        value = value.toString();
-        console.log(value)
-        return value.length == 6 || value.length == 2 ? value.slice(0, 3) : value.slice(0, 4)
+
+        let fixed = parseFloat(value.toFixed(2));
+        fixed = fixed.toString();
+        return fixed
       },
       formatoPadrao: function (formato) {
         return formato.includes("NaN") ? "y = m * x + b" : formato;
@@ -496,7 +500,6 @@
   }
 </script>
 <style>
-  /* Issues : Template do chart quebra em x,y  onde x < 360 */
 
   .fade-enter-active,
   .fade-leave-active {
@@ -504,10 +507,7 @@
   }
 
   .fade-enter,
-  .fade-leave-to
-
-  /* .fade-leave-active em versões anteriores a 2.1.8 */
-    {
+  .fade-leave-to{
     opacity: 0;
   }
 
@@ -520,21 +520,8 @@
     align-content: stretch;
   }
 
-  .card {
-    background-color: white;
-  }
-
-  .chart {
-    top: 4rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-  }
-
   #painelAmostras {
     position: sticky;
     top: 1rem;
-
   }
 </style>

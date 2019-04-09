@@ -39,7 +39,7 @@
           <label class="ion-email" for="email"></label>
           <input type="tel" id="telefone" placeholder="Telefone" v-model="telefone" required />
         </div>
-        <input type="submit" value="Fazer cadastro" @click.prevent="validarSenhas" />
+        <input type="submit" value="Fazer cadastro"  />
       </form>
     </div>
   </div>

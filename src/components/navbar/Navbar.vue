@@ -4,7 +4,7 @@
       <div id="logo">
         <img src="../../assets/garten.png" alt="">
       </div>
-      <div id="Navbar">
+      <div id="Navbar" :style="transtionToLoader">
         <nav class="navbar navbar-expand-lg ">
           <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
             <span>
@@ -21,6 +21,12 @@
               <font-awesome-icon icon="file-csv" class="fa-2x" style="margin-top:0rem;" />
             </span>
           </a>
+          <a href='#' @click.prevent.stop="dispatchDownloadPDF" v-b-tooltip.hover title="Fazer Download em formato PDF">
+            <span>
+              <font-awesome-icon icon="file-pdf" class="fa-2x" style="margin-top:0rem;" />
+            </span>
+          </a>
+
         </nav>
       </div>
     </div>
@@ -31,7 +37,13 @@
 
   export default {
     data() {
-      return {}
+      return {
+        transtionToLoader:{
+          'transition: 1s' : true,
+          'margin-top: -100px' : true,
+          'transition-timing-function : cubic-bezier(0.22, 0.61, 0.36, 1)': true
+        }
+      }
     },
     methods: {
       dispatchSalvar() {
@@ -43,8 +55,8 @@
       dispatchDownload() {
         this.$emit('dispatchDownload');
       },
-      printPage() {
-        this.$emit('dispatchDownload');
+      dispatchDownloadPDF() {
+        this.$emit('dispatchDownloadPDF');
       }
     },
 

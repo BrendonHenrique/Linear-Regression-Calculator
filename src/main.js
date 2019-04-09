@@ -10,6 +10,7 @@ import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import { faFileCsv } from '@fortawesome/free-solid-svg-icons'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
@@ -18,6 +19,7 @@ library.add(faCloudUploadAlt)
 library.add(faSync)
 library.add(faFileCsv)
 library.add(faEdit)
+library.add(faFilePdf)
 
 
 const router =  new VueRouter({routes});

@@ -2,68 +2,82 @@
   <!-- Enviar formula em csv -->
   <div id="app">
     <meta charset="UTF-8">
-      <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar" v-on:dispatchDownload="download"
-        v-on:dispatchDownloadPDF="ExportarPDF">
-      </mineNavbar><br><br>
     <div class="container">
+      <div class="row">
+        <div id="logo">
+          <img src="../../assets/garten.png" style="width:18em;">
+        </div>
+        <transition name="slide-fade">
+          <i v-if="showLoader">
+            <b-spinner type="grow" style="margin-left:27rem;margin-top:2rem;"></b-spinner>
+          </i>
+        </transition>
+        <transition name="slide-fade">
+          <i v-if="!showLoader">
+            <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
+              v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF"
+              style="margin-left:20rem;margin-top:2rem;">
+            </mineNavbar>
+          </i>
+        </transition>
+      </div>
       <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
       <div class="row">
         <!--  CHARTS  JS  -->
-        <div class="col-lg-12">
+        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10">
           <canvas id="myChart"></canvas>
         </div>
       </div>
+      <!-- Loader para carregamento das operações -->
+      <div id="loader" class="row">
+        <div class="col-lg-2">
 
+        </div>
+      </div>
       <div class="row">
         <!-- painel da formula e painel de entrada de valores na função   -->
-        <div class="col-lg-8" style="top: 6rem;">
+        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
           <div class="card  mb-4 ">
             <div class="row" id="InfosTabela">
               <div class="col-lg-6">
                 <div class="card card-header">
-                  <h3>{{formula | formatoPadrao}}</h3>
-                  <h3>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</h3>
+                  <p>{{formula | formatoPadrao}}</p>
+                  <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
                   <div style="left:19px">
-                    <h3>
-                      x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
-                        style="width: 50%;"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        maxlength="6">
-                    </h3>
+                    <form>
+                        <p> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
+                        maxlength='6' style="width: 50%;" step="any">
+                        </p>
+                    </form>
                   </div>
                 </div>
               </div>
               <div class="col-lg-6">
                 <div class="card card-header">
-                  <div class="container">
-                    <div class="row">
-                      <h3>
-                        Calibrado ?
-                        <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
-
-                        <label for="Sim">Sim</label>
-
-                        <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
-
-                        <label for="Nao">Não</label>
-                      </h3>
-                    </div>
-                    <transition name="fade">
-                      <div v-if="booleanCalibrado == 'sim'">
-                        <div class="row" style="height: 5rem;">
-                          <h3>
-                            <label for="M">(m) </label>
-                            <input type="number" id="M" name="calibrado" value="sim" maxlength='6' style="width: 50%;"
-                              v-model="calibradoM" checked>
-                            <br>
-                            <label for="M">(b) </label>
-                            <input type="number" id="M" name="calibrado" value="sim" maxlength='6' v-model="calibradoB"
-                              style="margin-left:0.5rem;width: 50%;">
-                          </h3>
-                        </div>
-                      </div>
-                    </transition>
+                  <div class="row">
+                    <p>
+                      Calibrado ?
+                      <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
+                      <label for="Sim">Sim</label>
+                      <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
+                      <label for="Nao">Não</label>
+                    </p>
                   </div>
+                  <transition name="fade">
+                    <div v-if="booleanCalibrado == 'sim'">
+                      <div class="row" style="height: 5rem;">
+                        <p>
+                          <label for="M">(m) </label>
+                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' style="width: 50%;"
+                            v-model="calibradoM" step="any" hecked>
+                          <br>
+                          <label for="M">(b) </label>
+                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' v-model="calibradoB"
+                            style="margin-left:0.5rem;width: 50%;" step="any">
+                        </p>
+                      </div>
+                    </div>
+                  </transition>
                 </div>
               </div>
             </div>
@@ -73,23 +87,22 @@
                 <thead>
                   <tr>
                     <th>
-                      <h2>Garten</h2>
+                      <h5>Garten</h5>
                     </th>
                     <th>
-                      <h2>Laboratório</h2>
+                      <h5>Laboratório</h5>
                     </th>
                   </tr>
                 </thead>
                 <tbody v-for="(indexValues, index) of valuesHabilitados" :key="index">
                   <tr>
-                    <!-- Uso do componente .vue EditableCell para uma tabela com células editáveis -->
                     <EditableCell :id="indexValues" :content="indexValues.x" @newEdit="valorNovoX">
                     </EditableCell>
                     <EditableCell :id="indexValues" :content="indexValues.y" @newEdit="valorNovoY">
                     </EditableCell>
                     <td>
                       <button class="btn btn-outline-danger" @click="excluirAmostra(index);">
-                        <h3>Remover</h3>
+                        <h5>Remover</h5>
                       </button>
                     </td>
                   </tr>
@@ -99,31 +112,29 @@
           </div>
         </div>
         <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
-        <div class="col-lg-4 " style="top: 6rem;">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 " style="top: 6rem;">
           <div id="painelAmostras" class="card mb-4 ">
             <div class="card card-header ">
-              <h3>Adicionar amostra</h3>
+              <h5>Adicionar amostra</h5>
             </div>
             <div class="card-body">
               <div class="form-group">
-                <form>
+                <form @submit="insert()">
                   <label for="input1">
-                    <h3>X: Garten</h3>
+                    <p>X: Garten</p>
                     <input class="form-control" id="input1" type="number" step="any" autocomplete="off"
-                      v-model="amostra.x" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
+                      v-model="amostra.x" maxlength='6' required  />
                   </label>
-                  <hr>
+                  <br>
                   <label for="input2">
-                    <h3>Y: Laboratório</h3>
+                    <p>Y: Laboratório</p>
                     <input class="form-control" id="input2" type="number" step="any" autocomplete="off"
-                      v-model="amostra.y" @keyup.enter="insert" maxlength='6' style="width: 55%;" required />
-                  </label>
+                      v-model="amostra.y" @keyup.enter="submit" maxlength='6' required />
+                  </label><br><br>
+                  <button type="submit" class="btn btn-outline-dark">Adicionar</button>
                 </form>
               </div>
             </div>
-            <button type="button" class="btn btn-outline-dark" @click="insert()">
-              <h4>Adicionar</h4>
-            </button>
           </div>
         </div>
       </div>
@@ -137,15 +148,14 @@
   import Toasted from 'vue-toasted';
   import BootstrapVue from 'bootstrap-vue'
   import jsPDF from 'jspdf';
+  import BSpinner from 'bootstrap-vue/es/components/spinner/spinner'
   import Navbar from '../navbar/Navbar.vue';
   import EditableCell from '../EditableCell/EditableCell.vue';
   import ChartScript from '../../utils/Chart/ChartScript.js';
   import Calculadora from '../../utils/CalculadoraDeRegressao/Calculadora.js'
   import Conversor from '../../utils/Conversor/Conversor.js'
-
   Vue.use(Toasted);
   var myChart = null;
-
   var atualizaGrafico = function (vm, chart) {
     let regressao = Calculadora(vm);
     let valores = regressao.getValores();
@@ -158,7 +168,6 @@
     chart.data.datasets[2].data = vm.valuesDesabilitados;
     chart.update()
   }
-
   export default {
     data() {
       return {
@@ -186,17 +195,13 @@
       }
     },
     mounted() {
-
       this.createChart('myChart', ChartScript, this);
       document.getElementById('input1').focus();
-
       // Teste de existência de pontos na rota localhost:8080/api/sketch
       if (this.$route.params.pontos) {
-
         this.values.push(...this.$route.params.pontos);
         // Teste de existência de pontos no localStorage
       } else if (localStorage.getItem('valuesDB')) {
-
         let storeValues = localStorage.getItem('valuesDB');
         let ValuesObject = JSON.parse(storeValues);
         this.values.push(...ValuesObject);
@@ -207,7 +212,6 @@
       }
       window.myChart = myChart
       this.toastIt(this, 'info');
-      document.body.style.zoom = 0.9;
     },
     updated() {
       atualizaGrafico(this, myChart);
@@ -216,12 +220,6 @@
       values() {
         let regressao = Calculadora(this);
         localStorage.setItem("valuesDB", JSON.stringify(this.values));
-      },
-      booleanCalibrado() {
-        if (this.booleanCalibrado == 'nao') {
-          this.calibradoM = 1;
-          this.calibradoB = 0;
-        }
       }
     },
     methods: {
@@ -234,103 +232,96 @@
           anoF = data.getFullYear();
         return diaF + "-" + mesF + "-" + anoF;
       },
-       getHoras() {
-        let data = new Date();
-        let hora =  data.getHours();
-        let minutos =  data.getMinutes();
-        return hora + ":" + minutos ;
-      },
-
       // Fazer download em PDF
       ExportarPDF() {
-        let doc = new jsPDF();
+        if (this.values.length > 0) {
+          let doc = new jsPDF();
+          // Desenhando tabelas M/B
+          doc.rect(140, 30, 50, 10)
+          doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 38);
+          doc.rect(140, 40, 50, 40)
+          doc.text('m: ', 150, 50)
+          doc.text('b: ', 150, 70)
+          doc.text(`${this.calibradoM}`, 160, 50)
+          doc.text(`${this.calibradoB}`, 160, 70)
+          // Header Garten / Laboratório
+          doc.rect(20, 20, 100, 10)
+          doc.text(`${this.formula}`, 50, 27)
+          doc.rect(20, 30, 50, 10)
+          doc.rect(70, 30, 50, 10)
+          doc.text('X: Garten', 30, 38)
+          doc.text('Y: Laboratório', 75, 38)
+          let contadorTexto = 47;
+          let contadorTabela = 40;
+          //Corpo - Preencher X
+          this.values.forEach(element => {
+            doc.text(`${element.x}`, 40, contadorTexto)
+            doc.rect(20, contadorTabela, 50, 10)
+            doc.text(`${element.y}`, 90, contadorTexto)
+            doc.rect(70, contadorTabela, 50, 10)
+            contadorTexto += 10;
+            contadorTabela += 10;
+          });
+          // Gravador
+          let data = this.getData();
+          doc.save(`${data}.pdf`);
+        } else {
+          this.toastIt(this, 'valorInsuficiente');
+        }
 
-        // Desenhando tabelas M/B
-        doc.rect(140, 20, 65, 10)
-        doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 28);
-        doc.rect(140, 30, 65, 20)
-        doc.text('m: ', 142, 38)
-        doc.text('b: ', 142, 48)
-        doc.text(`${this.calibradoM}`, 160, 38)
-        doc.text(`${this.calibradoB}`, 160, 48)
-
-        // Desenhando tabela com horário e data
-        doc.rect(140, 30, 65, 60)
-        doc.text(`Data: ${this.getData()} `, 142, 60)
-        doc.text(`Horario: ${this.getHoras()} `, 142, 70)
-        doc.text('Operador:  ', 142, 80)
-
-        // Header Garten / Laboratório
-        doc.rect(20, 20, 100, 10)
-        doc.text(`${this.formula}`, 50, 27)
-
-        doc.rect(20, 30, 50, 10)
-        doc.rect(70, 30, 50, 10)
-        doc.text('X: Garten', 30, 38)
-        doc.text('Y: Laboratório', 75, 38)
-
-        let contadorTexto = 47;
-        let contadorTabela = 40;
-
-        //Corpo - Preencher Tabela
-        this.values.forEach(element => {
-          doc.text(`${element.x}`, 40, contadorTexto)
-          doc.rect(20, contadorTabela, 50, 10)
-
-          doc.text(`${element.y}`, 90, contadorTexto)
-          doc.rect(70, contadorTabela, 50, 10)
-
-          contadorTexto += 10;
-          contadorTabela += 10;
-        });
-
-        // Gravador
-        doc.save(`${this.getData()}.pdf`);
       },
-
       // Fazer download em CSV
       download: function (event) {
-        //Linhas
-        var headers = {
-          x: 'Garten',
-          y: 'Laboratório',
-          formula: 'Formula : ' + this.formula
-        };
-        //Colunas
-        var itemsNotFormatted = [{
-          x: '',
-          y: ''
-        }];
-        itemsNotFormatted.push(...this.values);
-        var itemsFormatted = [];
-        // format the data
-        itemsNotFormatted.forEach((item) => {
-          itemsFormatted.push({
-            x: item.x,
-            y: item.y
+        if (this.values.length > 0) {
+          //Linhas
+          var headers = {
+            x: 'Garten',
+            y: 'Laboratório',
+            formula: 'Formula : ' + this.formula
+          };
+          //Colunas
+          var itemsNotFormatted = [{
+            x: '',
+            y: ''
+          }];
+          itemsNotFormatted.push(...this.values);
+          var itemsFormatted = [];
+          // format the data
+          itemsNotFormatted.forEach((item) => {
+            itemsFormatted.push({
+              x: item.x,
+              y: item.y
+            });
           });
-        });
-        // Gravador
-        let fileTitle = this.getData();
-        Conversor.exportCSVFile(headers, itemsFormatted, fileTitle);
+          // Gravador
+          let fileTitle = this.getData();
+          Conversor.exportCSVFile(headers, itemsFormatted, fileTitle);
+        } else {
+          this.toastIt(this, 'valorInsuficiente');
+        }
       },
-
       // Interface de Avisos
       toastIt(vm, choice) {
         if (choice == 'info') {
-          let toast = vm.$toasted.info("Bem vindo(a) !!", {
+          let toast = vm.$toasted.info("Bem vindo(a) ", {
             theme: "bubble",
             position: "top-right",
             duration: 5000
           });
         } else if (choice == 'success') {
-          let toast = vm.$toasted.success("Amostra salva com sucesso !!", {
+          let toast = vm.$toasted.success("Amostra salva com sucesso ", {
             theme: "bubble",
             position: "top-right",
             duration: 5000
           });
         } else if (choice == 'error') {
-          let toast = vm.$toasted.error("Não foi possível salvar, tente novamente !!", {
+          let toast = vm.$toasted.error("Não foi possível salvar, tente novamente ", {
+            theme: "bubble",
+            position: "top-right",
+            duration: 5000
+          });
+        } else if (choice == 'valorInsuficiente') {
+          let toast = vm.$toasted.error("Não possui amostras suficientes ", {
             theme: "bubble",
             position: "top-right",
             duration: 5000
@@ -340,7 +331,6 @@
       atualizaResultado() {
         atualizaGrafico(this, myChart);
       },
-
       // Inserir e remover amostras
       insert() {
         this.values.push(Object.assign({}, this.amostra));
@@ -351,13 +341,11 @@
       excluirAmostra(index) {
         this.values.splice(index, 1);
       },
-
       // Guardar as informações no banco , por meio do POST pela interface salvarPontos
       post() {
         // let url = `http://10.0.0.110:4567/api/sketch/${this.$route.params.hash}`;
         let url = `http://localhost:8080/api/sketch/${this.$route.params.hash}`
         this.showLoader = true;
-
         axios.post(url, JSON.smyChart
           .then(response => {
             setTimeout(() => {
@@ -387,26 +375,30 @@
         )
       },
       salvarPontos() {
-        let url = `http://10.0.0.110:4567/api/sketch`;
-        // let url = 'http://localhost:8080/api/sketch'
-        this.showLoader = true;
-        if (this.$route.params.hash) {
-          this.hashCode = this.$route.params.hash;
-          this.post();
+        if (this.values.length > 0) {
+          let url = `http://10.0.0.110:4567/api/sketch`;
+          // let url = 'http://localhost:8080/api/sketch'
+          this.showLoader = true;
+          if (this.$route.params.hash) {
+            this.hashCode = this.$route.params.hash;
+            this.post();
+          } else {
+            axios.get(url).then(response => {
+                this.hashCode = this.$route.params.hash = response.data;
+                this.post();
+              })
+              .catch(
+                error => {
+                  this.toastIt(this, 'error');
+                }
+              )
+              .finally(loader => {
+                this.showLoader = false;
+                this.ExportarPDF();
+              })
+          }
         } else {
-          axios.get(url).then(response => {
-              this.hashCode = this.$route.params.hash = response.data;
-              this.post();
-            })
-            .catch(
-              error => {
-                this.toastIt(this, 'error');
-              }
-            )
-            .finally(loader => {
-              this.showLoader = false;
-              this.ExportarPDF();
-            })
+          this.toastIt(this, 'valorInsuficiente');
         }
       },
       valorNovoX(id, novoValor) {
@@ -420,9 +412,11 @@
         myChart.update();
       },
       reiniciar() {
-        if (confirm('Você quer mesmo reiniciar as amostras ?')) {
-          this.values = [];
-          atualizaGrafico(this, myChart);
+        if (this.values.length > 0) {
+          if (confirm('Você quer mesmo reiniciar as amostras ?')) {
+            this.values = [];
+            atualizaGrafico(this, myChart);
+          }
         }
       },
       createChart(chartId, chartData, vue) {
@@ -472,7 +466,8 @@
     },
     components: {
       'mineNavbar': Navbar,
-      'EditableCell': EditableCell
+      'EditableCell': EditableCell,
+      'b-spinner': BSpinner
     },
     computed: {
       valuesHabilitados() {
@@ -488,10 +483,8 @@
         if (isNaN(value)) {
           return '0'
         }
-
-        let fixed = parseFloat(value.toFixed(2));
-        fixed = fixed.toString();
-        return fixed
+        value = value.toString();
+        return value.length == 6 || value.length == 2 ? value.slice(0, 3) : value.slice(0, 4)
       },
       formatoPadrao: function (formato) {
         return formato.includes("NaN") ? "y = m * x + b" : formato;
@@ -501,13 +494,23 @@
 </script>
 <style>
 
-  .fade-enter-active,
-  .fade-leave-active {
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active em versões anteriores a 2.1.8 */ {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+
+  .fade-enter-active,.fade-leave-active {
     transition: opacity 1s;
   }
 
-  .fade-enter,
-  .fade-leave-to{
+  .fade-enter,.fade-leave-to{
     opacity: 0;
   }
 
@@ -518,6 +521,18 @@
     justify-content: center;
     align-items: center;
     align-content: stretch;
+  }
+
+  .card {
+    background-color: white;
+  }
+
+  .chart {
+    top: 4rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
   }
 
   #painelAmostras {

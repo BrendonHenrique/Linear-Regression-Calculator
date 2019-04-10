@@ -4,13 +4,11 @@
     <link href="https://fonts.googleapis.com/css?family=Oxygen:400,300,700" rel="stylesheet" type="text/css" />
     <link href="https://code.ionicframework.com/ionicons/1.4.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <div class="signin cf">
-
       <div class="avatar">
         <img src="../../assets/garten2.svg" style="height: 5rem;
           margin-left: -8.4rem;
           margin-top: 5rem;">
       </div>
-
       <!-- Form de cadastro -->
       <form>
         <div class="inputrow">
@@ -39,7 +37,7 @@
           <label class="ion-email" for="email"></label>
           <input type="tel" id="telefone" placeholder="Telefone" v-model="telefone" required />
         </div>
-        <input type="submit" value="Fazer cadastro"  />
+        <input type="submit" value="Fazer cadastro" />
       </form>
     </div>
   </div>

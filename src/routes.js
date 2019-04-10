@@ -12,20 +12,20 @@ export const routes = [
   {path: '/cadastro', component:Cadastro },
   {path : '/', component: Home, beforeEnter: (to,from,next) =>{
 
-    // Verificação de usuário logado se não redireciona de volta para login se sim redireciona para home
-    const loggedIn = localStorage.getItem('user');
-    console.log(loggedIn);
+    // // Verificação de usuário logado se não redireciona de volta para login se sim redireciona para home
+    // const loggedIn = localStorage.getItem('user');
 
-    if(!loggedIn){
-      return next('/login');
-    }else{
+    // if(!loggedIn){
+    //   return next('/login');
+    // }else{
       next();
-    }}
+    // }
+  }
   },
   {path : '/:hash', component: Home, beforeEnter: (to, from, next) => {
     //10.0.0.110:4567
     let hash = to.params.hash;
-    let url = `http://10.0.0.76:4567/api/sketch/${hash}`
+    let url = `http://10.0.0.112:4567/api/sketch/${hash}`
 
     axios.get(url).then(response=>{
       to.params.pontos = response.data;

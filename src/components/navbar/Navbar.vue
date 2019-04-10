@@ -1,39 +1,25 @@
 <template>
-  <div class="row">
-    <div id="logo">
-      <img src="../../assets/garten.png" style="width:18rem;">
-    </div>
-    <div id="Navbar" :style="transtionToLoader">
-      <nav class="navbar navbar-expand-lg " style="margin-left:-13rem;">
-        <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
-          <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" />
-        </a>
-        <a href='#' @click.prevent.stop="dispatchReiniciar" v-b-tooltip.hover title="Reiniciar as amostras">
-          <font-awesome-icon icon="sync" class="fa-2x" />
-        </a>
-        <a href='#' @click.prevent.stop="dispatchDownload" v-b-tooltip.hover title="Fazer Download em formato CSV">
-          <font-awesome-icon icon="file-csv" class="fa-2x" />
-        </a>
-        <a href='#' @click.prevent.stop="dispatchDownloadPDF" v-b-tooltip.hover title="Fazer Download em formato PDF">
-          <font-awesome-icon icon="file-pdf" class="fa-2x" />
-        </a>
-      </nav>
-    </div>
+  <div id="Navbar">
+    <nav class="navbar navbar-expand-md">
+      <a href='#' @click.prevent.stop="dispatchSalvar" v-b-tooltip.hover title="Salvar as amostras">
+        <font-awesome-icon icon="cloud-upload-alt" class="fa-2x" />
+      </a>
+      <a href='#' @click.prevent.stop="dispatchReiniciar" v-b-tooltip.hover title="Reiniciar as amostras">
+        <font-awesome-icon icon="sync" class="fa-2x" />
+      </a>
+      <a href='#' @click.prevent.stop="dispatchDownload" v-b-tooltip.hover title="Fazer Download em formato CSV">
+        <font-awesome-icon icon="file-csv" class="fa-2x" />
+      </a>
+      <a href='#' @click.prevent.stop="dispatchDownloadPDF" v-b-tooltip.hover title="Fazer Download em formato PDF">
+        <font-awesome-icon icon="file-pdf" class="fa-2x" />
+      </a>
+    </nav>
   </div>
 </template>
 <script>
-  import BSpinner from 'bootstrap-vue/es/components/spinner/spinner'
-  import BootstrapVue from 'bootstrap-vue'
-
   export default {
     data() {
-      return {
-        transtionToLoader: {
-          'transition: 1s': true,
-          'margin-top: -100px': true,
-          'transition-timing-function : cubic-bezier(0.22, 0.61, 0.36, 1)': true
-        }
-      }
+      return {}
     },
     methods: {
       dispatchSalvar() {
@@ -48,24 +34,13 @@
       dispatchDownloadPDF() {
         this.$emit('dispatchDownloadPDF');
       }
-    },
-    components: {
-      'b-spinner': BSpinner,
     }
   }
 </script>
 
 <style>
-  * {
-    -webkit-font-smoothing: antialiased;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-
   a {
-    margin-top: -1rem;
+    margin-top: -2rem;
     padding-bottom: 3rem;
   }
 
@@ -88,15 +63,12 @@
     color: white;
     text-align: center;
     line-height: 1.2;
-    /* display: block; */
   }
 
   #Navbar a:not(.active) {
-
-
     box-shadow:
       inset 0 0.07rem 0.07rem rgba(255, 255, 255, 0.1),
-      inset 0 -0.07rem 0 rgba(0, 0, 0, 0.2),
+      inset 0 -0.07rem 0 100rem  rgba(0, 0, 0, 0.2),
       0 0.7rem 1.23rem 0 rgba(0, 0, 0, 0.3),
       0 0.3rem 0.23rem 0 rgba(0, 0, 0, 0.3),
       0 0 0 0.07rem rgba(0, 0, 0, .2);
@@ -132,11 +104,8 @@
 
   #Navbar a.active:before,
   #Navbar a:active:before {
-    position: absolute;
+
     background: linear-gradient(to bottom, #485258 0%, #485258 15%, #86c6ef 50%, #86c6ef 50%, #86c6ef 51%, #30383c 85%, #30383c 100%);
-    /* W3C */
-    display: block;
-    Navbar: "";
     width: 0.07rem;
     height: 3rem;
     top: 0.07rem;
@@ -146,9 +115,8 @@
 
   #Navbar a.active:after,
   #Navbar a:active:after {
-    position: absolute;
+
     display: block;
-    Navbar: "";
     width: 0.07rem;
     height: 13rem;
     top: 0.07rem;
@@ -169,7 +137,7 @@
   }
 
   #Navbar a.active {
-    z-index: 1000
+    z-index: 999
   }
 
   #Navbar a:active {

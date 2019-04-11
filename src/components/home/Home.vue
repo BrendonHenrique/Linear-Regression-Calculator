@@ -1,96 +1,92 @@
 <template>
-  <!-- Enviar formula em csv -->
   <div id="app">
     <meta charset="UTF-8">
+    <transition name="slide-fade">
+      <i v-if="showLoader">
+        <b-spinner type="grow" style="margin-left:27rem;margin-top:2rem;"></b-spinner>
+      </i>
+    </transition>
+    <transition name="slide-fade">
+      <i v-if="!showLoader">
+        <!-- <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
+          v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF"
+          style="margin-left:20rem;margin-top:2rem;">
+        </mineNavbar> -->
+        <mineNavbar />
+      </i>
+    </transition>
     <div class="container">
       <div class="row">
-        <div id="logo">
-          <img src="../../assets/garten.png" style="width:18em;">
-        </div>
-        <transition name="slide-fade">
-          <i v-if="showLoader">
-            <b-spinner type="grow" style="margin-left:27rem;margin-top:2rem;"></b-spinner>
-          </i>
-        </transition>
-        <transition name="slide-fade">
-          <i v-if="!showLoader">
-            <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
-              v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF"
-              style="margin-left:20rem;margin-top:2rem;">
-            </mineNavbar>
-          </i>
-        </transition>
-      </div>
-      <!-- Uso do bootstrap pela class container com divisões para cada linha com as classes 'row' -->
-      <div class="row">
-        <!--  CHARTS  JS  -->
         <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10">
           <canvas id="myChart"></canvas>
         </div>
       </div>
-      <!-- Loader para carregamento das operações -->
-      <div id="loader" class="row">
-        <div class="col-lg-2">
-
-        </div>
-      </div>
       <div class="row">
-        <!-- painel da formula e painel de entrada de valores na função   -->
         <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
-          <div class="card  mb-4 ">
-            <div class="row" id="InfosTabela">
+            <div class="row">
               <div class="col-lg-6">
-                <div class="card card-header">
-                  <p>{{formula | formatoPadrao}}</p>
-                  <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
-                  <div style="left:19px">
-                    <form>
-                        <p> x = <input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula"
-                        maxlength='6' style="width: 50%;" step="any">
-                        </p>
-                    </form>
-                  </div>
-                </div>
+                <b-card no-body class="mb-2">
+                  <b-card-header header-tag="header" class="p-1" role="tab">
+                    <b-button block href="#" v-b-toggle.accordion-1 variant="info">Equação</b-button>
+                  </b-card-header>
+                  <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+                    <b-card-body>
+                      <p>{{formula | formatoPadrao}}</p>
+                      <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
+                      <b-input-group>
+                        <b-input-group-text slot="prepend" prepend="Label">X
+                        </b-input-group-text>
+                        <b-form-input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" max='6'
+                          style="width: 50%;" step="any"></b-form-input>
+                      </b-input-group>
+                    </b-card-body>
+                  </b-collapse>
+                </b-card>
               </div>
+
               <div class="col-lg-6">
-                <div class="card card-header">
-                  <div class="row">
-                    <p>
-                      Calibrado ?
-                      <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
-                      <label for="Sim">Sim</label>
-                      <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
-                      <label for="Nao">Não</label>
-                    </p>
-                  </div>
+                <b-card style="padding-top:0.65rem;">
+                  Calibrado ?
+                  <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
+                  <label for="Sim">Sim</label>
+                  <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
+                  <label for="Nao">Não</label>
                   <transition name="fade">
                     <div v-if="booleanCalibrado == 'sim'">
-                      <div class="row" style="height: 5rem;">
-                        <p>
-                          <label for="M">(m) </label>
-                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' style="width: 50%;"
-                            v-model="calibradoM" step="any" hecked>
-                          <br>
-                          <label for="M">(b) </label>
-                          <input type="number" id="M" name="calibrado" value="sim" maxlength='6' v-model="calibradoB"
-                            style="margin-left:0.5rem;width: 50%;" step="any">
-                        </p>
-                      </div>
+                      <b-input-group>
+                        <b-input-group-text slot="prepend" prepend="Label">M
+                        </b-input-group-text>
+                        <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoM" step="any"
+                          checked></b-form-input>
+                      </b-input-group>
+                      <b-input-group>
+                        <b-input-group-text slot="prepend" style="padding-right:0.95rem;" prepend="Label">B
+                        </b-input-group-text>
+                        <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoB" step="any">
+                        </b-form-input>
+                      </b-input-group>
                     </div>
                   </transition>
-                </div>
+                </b-card>
               </div>
             </div>
-            <div class="card card-body">
-              <!-- Tabela de amostras Garten X Laboratório -->
-              <table class="table">
+
+          <div class="card mb-6">
+            <div class="card-body">
+              <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>
-                      <h5>Garten</h5>
+                    <th style="margin-right:19rem;">
+                      <h5>
+                        <b>Garten</b>
+                      </h5>
                     </th>
                     <th>
-                      <h5>Laboratório</h5>
+                      <h5>
+                        <b>Laboratório</b>
+                      </h5>
+                    </th>
+                    <th>
                     </th>
                   </tr>
                 </thead>
@@ -100,17 +96,16 @@
                     </EditableCell>
                     <EditableCell :id="indexValues" :content="indexValues.y" @newEdit="valorNovoY">
                     </EditableCell>
-                    <td>
-                      <button class="btn btn-outline-danger" @click="excluirAmostra(index);">
-                        <h5>Remover</h5>
-                      </button>
-                    </td>
+                    <button class="btn btn-outline-danger" @click="excluirAmostra(index);">
+                      <h6>Remover</h6>
+                    </button>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+
         <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
         <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 " style="top: 6rem;">
           <div id="painelAmostras" class="card mb-4 ">
@@ -120,17 +115,20 @@
             <div class="card-body">
               <div class="form-group">
                 <form @submit="insert()">
-                  <label for="input1">
-                    <p>X: Garten</p>
-                    <input class="form-control" id="input1" type="number" step="any" autocomplete="off"
-                      v-model="amostra.x" maxlength='6' required  />
-                  </label>
+                  <b-input-group>
+                    <b-input-group-text slot="prepend" prepend="Label"
+                    style="padding-right:2.7rem;">X:Garten
+                    </b-input-group-text>
+                    <b-form-input  id="input1" type="number" step="any" autocomplete="off"
+                      v-model="amostra.x" maxlength='6' required></b-form-input>
+                  </b-input-group>
+                  <b-input-group>
+                    <b-input-group-text slot="prepend" prepend="Label">Y:Laboratório
+                    </b-input-group-text>
+                    <b-form-input id="input2" type="number" step="any" autocomplete="off"
+                      v-model="amostra.y" @keyup.enter="submit" maxlength='6' required ></b-form-input>
+                  </b-input-group>
                   <br>
-                  <label for="input2">
-                    <p>Y: Laboratório</p>
-                    <input class="form-control" id="input2" type="number" step="any" autocomplete="off"
-                      v-model="amostra.y" @keyup.enter="submit" maxlength='6' required />
-                  </label><br><br>
                   <button type="submit" class="btn btn-outline-dark">Adicionar</button>
                 </form>
               </div>
@@ -493,46 +491,44 @@
   }
 </script>
 <style>
+  body {
+    background-color: #F8F9FA
+  }
 
   .slide-fade-enter-active {
     transition: all .3s ease;
   }
+
   .slide-fade-leave-active {
     transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-  .slide-fade-enter, .slide-fade-leave-to
-  /* .slide-fade-leave-active em versões anteriores a 2.1.8 */ {
+
+  .slide-fade-enter,
+  .slide-fade-leave-to {
     transform: translateY(-100px);
     opacity: 0;
   }
 
-  .fade-enter-active,.fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: opacity 1s;
   }
 
-  .fade-enter,.fade-leave-to{
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 
-  #InfosTabela {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    align-content: stretch;
-  }
-
   .card {
-    background-color: white;
+    background-color:rgba(255, 255, 255, 0.8);
   }
 
   .chart {
     top: 4rem;
-    display: block;
+    display: relative;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
+    width: 100%;
   }
 
   #painelAmostras {

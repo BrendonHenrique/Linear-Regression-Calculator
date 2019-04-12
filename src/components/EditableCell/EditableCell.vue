@@ -2,8 +2,7 @@
   <td>
     <div class="input-group" v-if="editable">
       <form @submit='submit'>
-        <input type="number" v-model="contentEdit" class="form-control"  :placeholder="content"
-         v-b-tooltip.hover title="editar amostra"  step="any">
+        <input type="number" v-model="contentEdit" class="form-control"  :placeholder="content"  step="any">
       </form>
     </div>
     <div v-else>

@@ -1,97 +1,117 @@
 <template>
   <div id="app">
     <meta charset="UTF-8">
-    <transition name="slide-fade">
-      <i v-if="showLoader">
-        <b-spinner type="grow" style="margin-left:27rem;margin-top:2rem;"></b-spinner>
-      </i>
-    </transition>
-    <transition name="slide-fade">
-      <i v-if="!showLoader">
-        <!-- <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
-          v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF"
-          style="margin-left:20rem;margin-top:2rem;">
-        </mineNavbar> -->
-        <mineNavbar />
-      </i>
-    </transition>
-    <div class="container">
+      <transition name="slide-fade">
+        <i v-if="showLoader">
+          <b-spinner type="grow" style="margin-left:45%;margin-top: 4rem;margin-bottom:4rem;"></b-spinner>
+        </i>
+      </transition>
+      <transition name="slide-fade">
+        <i v-if="!showLoader">
+          <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
+            v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF">
+          </mineNavbar>
+        </i>
+      </transition>
+    <div class="container" style="margin-top:5rem;">
       <div class="row">
-        <div class="chart col-xs-36 col-sm-24 col-md-18 col-lg-10">
-          <canvas id="myChart"></canvas>
+        <div class="charts col-xs-36 col-sm-24 col-md-18 col-lg-10 ">
+         <canvas id="myChart"></canvas>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8" style="top: 6rem;">
-            <div class="row">
-              <div class="col-lg-6">
-                <b-card no-body class="mb-2">
-                  <b-card-header header-tag="header" class="p-1" role="tab">
-                    <b-button block href="#" v-b-toggle.accordion-1 variant="info">Equação</b-button>
-                  </b-card-header>
-                  <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-                    <b-card-body>
-                      <p>{{formula | formatoPadrao}}</p>
-                      <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
-                      <b-input-group>
-                        <b-input-group-text slot="prepend" prepend="Label">X
-                        </b-input-group-text>
-                        <b-form-input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" max='6'
-                          style="width: 50%;" step="any"></b-form-input>
-                      </b-input-group>
-                    </b-card-body>
-                  </b-collapse>
-                </b-card>
-              </div>
-
-              <div class="col-lg-6">
-                <b-card style="padding-top:0.65rem;">
-                  Calibrado ?
-                  <input type="radio" id="Sim" name="calibrado" value="sim" v-model="booleanCalibrado" checked>
-                  <label for="Sim">Sim</label>
-                  <input type="radio" id="Nao" name="calibrado" v-model="booleanCalibrado" value="nao">
-                  <label for="Nao">Não</label>
-                  <transition name="fade">
-                    <div v-if="booleanCalibrado == 'sim'">
-                      <b-input-group>
-                        <b-input-group-text slot="prepend" prepend="Label">M
-                        </b-input-group-text>
-                        <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoM" step="any"
-                          checked></b-form-input>
-                      </b-input-group>
-                      <b-input-group>
-                        <b-input-group-text slot="prepend" style="padding-right:0.95rem;" prepend="Label">B
-                        </b-input-group-text>
-                        <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoB" step="any">
-                        </b-form-input>
-                      </b-input-group>
-                    </div>
-                  </transition>
-                </b-card>
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4  order-xs-first order-sm-first order-md-first order-lg-last" style="top: 4rem;">
+          <div id="painelAmostras" class="card mb-4 ">
+            <div class="card card-header ">
+              <h5>Adicionar amostra</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <form @submit="insert()">
+                  <b-input-group>
+                    <b-input-group-text slot="prepend" prepend="Label" style="padding-right:2.7rem;">X:Garten
+                    </b-input-group-text>
+                    <b-form-input id="input1" type="number" step="any" autocomplete="off" v-model="amostra.x"
+                      maxlength='6' required></b-form-input>
+                  </b-input-group>
+                  <b-input-group>
+                    <b-input-group-text slot="prepend" prepend="Label">Y:Laboratório
+                    </b-input-group-text>
+                    <b-form-input id="input2" type="number" step="any" autocomplete="off" v-model="amostra.y"
+                      @keyup.enter="submit" maxlength='6' required></b-form-input>
+                  </b-input-group>
+                  <br>
+                  <button type="submit" class="btn btn-outline-dark">Adicionar</button>
+                </form>
               </div>
             </div>
-
+          </div>
+        </div>
+        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-8 order-xs-2" style="top: 3rem;">
+          <div class="row">
+            <div class="col-lg-6">
+              <b-card no-body class="mb-2">
+                <b-card-header header-tag="header" class="p-1">
+                  <b-button block href="#" v-b-toggle.accordion-1 variant="info">Ver equação</b-button>
+                </b-card-header>
+                <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+                  <b-card-body>
+                    <b-alert show variant="info">Informe um valor para X e ele será usado para o calculo da equação.
+                      Os valores atuais das constantes M e B são respectivamente {{gradiente}} e {{interceptador}}</b-alert><br>
+                    <p>{{formula | formatoPadrao}}</p>
+                    <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
+                    <b-input-group>
+                      <b-input-group-text slot="prepend" prepend="Label">X
+                      </b-input-group-text>
+                      <b-form-input type="number" v-on:keyup="atualizaResultado" v-model="variavelDaFormula" max='6'
+                        style="width: 50%;" step="any"></b-form-input>
+                    </b-input-group>
+                  </b-card-body>
+                </b-collapse>
+              </b-card>
+            </div>
+            <div class="col-lg-6 order-xs-3">
+              <b-card no-body class="mb-2">
+                <b-card-header header-tag="header" class="p-1">
+                  <b-button block href="#" v-b-toggle.accordion-2 variant="info">Já calibrou antes ? Clique aqui !</b-button>
+                </b-card-header>
+                <b-collapse id="accordion-2" visible accordion="my-accordion" role="tabpanel">
+                  <b-card-body>
+                    <b-alert show variant="info">Informe as constantes M e B de calibrações anteriores.</b-alert><br>
+                    <b-input-group>
+                      <b-input-group-text slot="prepend" prepend="Label">M
+                      </b-input-group-text>
+                      <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoM" step="any"
+                        checked></b-form-input>
+                    </b-input-group>
+                    <b-input-group>
+                      <b-input-group-text slot="prepend" style="padding-right:0.95rem;" prepend="Label">B
+                      </b-input-group-text>
+                      <b-form-input type="number" id="M" name="calibrado" value="sim" v-model="calibradoB" step="any">
+                      </b-form-input>
+                    </b-input-group>
+                  </b-card-body>
+                </b-collapse>
+              </b-card>
+            </div>
+          </div>
           <div class="card mb-6">
             <div class="card-body">
               <table class="table table-hover">
                 <thead>
                   <tr>
                     <th style="margin-right:19rem;">
-                      <h5>
-                        <b>Garten</b>
-                      </h5>
+                      <h5><b>Garten</b></h5>
                     </th>
                     <th>
-                      <h5>
-                        <b>Laboratório</b>
-                      </h5>
+                      <h5><b>Laboratório</b></h5>
                     </th>
                     <th>
                     </th>
                   </tr>
                 </thead>
                 <tbody v-for="(indexValues, index) of valuesHabilitados" :key="index">
-                  <tr>
+                  <tr v-b-tooltip.hover.bottom="'Clique no número para editar !'">
                     <EditableCell :id="indexValues" :content="indexValues.x" @newEdit="valorNovoX">
                     </EditableCell>
                     <EditableCell :id="indexValues" :content="indexValues.y" @newEdit="valorNovoY">
@@ -102,36 +122,6 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- Painel de controle das amostras para adicionar, salvar, reiniciar e exportar em formato .csv -->
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 " style="top: 6rem;">
-          <div id="painelAmostras" class="card mb-4 ">
-            <div class="card card-header ">
-              <h5>Adicionar amostra</h5>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <form @submit="insert()">
-                  <b-input-group>
-                    <b-input-group-text slot="prepend" prepend="Label"
-                    style="padding-right:2.7rem;">X:Garten
-                    </b-input-group-text>
-                    <b-form-input  id="input1" type="number" step="any" autocomplete="off"
-                      v-model="amostra.x" maxlength='6' required></b-form-input>
-                  </b-input-group>
-                  <b-input-group>
-                    <b-input-group-text slot="prepend" prepend="Label">Y:Laboratório
-                    </b-input-group-text>
-                    <b-form-input id="input2" type="number" step="any" autocomplete="off"
-                      v-model="amostra.y" @keyup.enter="submit" maxlength='6' required ></b-form-input>
-                  </b-input-group>
-                  <br>
-                  <button type="submit" class="btn btn-outline-dark">Adicionar</button>
-                </form>
-              </div>
             </div>
           </div>
         </div>
@@ -218,6 +208,9 @@
       values() {
         let regressao = Calculadora(this);
         localStorage.setItem("valuesDB", JSON.stringify(this.values));
+        
+        this.gradiente = regressao.getGradiente() ;
+        isNaN(regressao.getInterceptador())  ?  this.interceptador = '0' : this.interceptador = regressao.getInterceptador();
       }
     },
     methods: {
@@ -230,18 +223,35 @@
           anoF = data.getFullYear();
         return diaF + "-" + mesF + "-" + anoF;
       },
+      getHora() {
+        let data = new Date();
+        let horas = data.getHours();
+        let minutos = data.getMinutes();
+
+        return horas + ':' + minutos;
+      },
       // Fazer download em PDF
+
       ExportarPDF() {
         if (this.values.length > 0) {
+
           let doc = new jsPDF();
+          let horas = this.getHora();
+          let contadorTexto = 47;
+          let contadorTabela = 40;
+          let data = this.getData();
+
+
           // Desenhando tabelas M/B
-          doc.rect(140, 30, 50, 10)
-          doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 38);
-          doc.rect(140, 40, 50, 40)
-          doc.text('m: ', 150, 50)
-          doc.text('b: ', 150, 70)
-          doc.text(`${this.calibradoM}`, 160, 50)
-          doc.text(`${this.calibradoB}`, 160, 70)
+          doc.rect(140, 20, 50, 55)
+          doc.text(` Calibrado : ${this.booleanCalibrado}`, 140, 28);
+          doc.text('m: ', 142, 40)
+          doc.text('b: ', 142, 50)
+          doc.text(`${this.calibradoM}`, 152, 40)
+          doc.text(`${this.calibradoB}`, 152, 50)
+          doc.text(`Data:${data} `, 142, 60)
+          doc.text(`Horas:${horas}`, 142, 70)
+
           // Header Garten / Laboratório
           doc.rect(20, 20, 100, 10)
           doc.text(`${this.formula}`, 50, 27)
@@ -249,8 +259,6 @@
           doc.rect(70, 30, 50, 10)
           doc.text('X: Garten', 30, 38)
           doc.text('Y: Laboratório', 75, 38)
-          let contadorTexto = 47;
-          let contadorTabela = 40;
           //Corpo - Preencher X
           this.values.forEach(element => {
             doc.text(`${element.x}`, 40, contadorTexto)
@@ -261,7 +269,6 @@
             contadorTabela += 10;
           });
           // Gravador
-          let data = this.getData();
           doc.save(`${data}.pdf`);
         } else {
           this.toastIt(this, 'valorInsuficiente');
@@ -491,16 +498,21 @@
   }
 </script>
 <style>
+  .charts {
+    min-width: 50%;
+    min-height: 60%;
+  }
+
   body {
     background-color: #F8F9FA
   }
 
   .slide-fade-enter-active {
-    transition: all .3s ease;
+    transition: all .2s;
   }
 
   .slide-fade-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    opacity: 0;
   }
 
   .slide-fade-enter,
@@ -509,26 +521,8 @@
     opacity: 0;
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 1s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
-
   .card {
-    background-color:rgba(255, 255, 255, 0.8);
-  }
-
-  .chart {
-    top: 4rem;
-    display: relative;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
   }
 
   #painelAmostras {

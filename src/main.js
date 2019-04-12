@@ -1,10 +1,10 @@
-import 'bootstrap';
+import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
-import VueRouter from 'vue-router';
+import VueRouter from 'vue-router'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
-import {routes} from './routes';
+import {routes} from './routes'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 import { faSync } from '@fortawesome/free-solid-svg-icons'

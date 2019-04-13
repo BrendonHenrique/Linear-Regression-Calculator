@@ -1,26 +1,28 @@
 <template>
   <div id="app">
     <meta charset="UTF-8">
-      <transition name="slide-fade">
-        <i v-if="showLoader">
-          <b-spinner type="grow" style="margin-left:45%;margin-top: 4rem;margin-bottom:4rem;"></b-spinner>
-        </i>
-      </transition>
-      <transition name="slide-fade">
-        <i v-if="!showLoader">
-          <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
-            v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF">
-          </mineNavbar>
-        </i>
-      </transition>
+    <transition name="slide-fade">
+      <i v-if="showLoader">
+        <b-spinner type="grow" style="margin-left:45%;margin-top: 4rem;margin-bottom:4rem;"></b-spinner>
+      </i>
+    </transition>
+    <transition name="slide-fade">
+      <i v-if="!showLoader">
+        <mineNavbar v-on:dispatchSalvar="salvarPontos" v-on:dispatchReiniciar="reiniciar"
+          v-on:dispatchDownload="download" v-on:dispatchDownloadPDF="ExportarPDF">
+        </mineNavbar>
+      </i>
+    </transition>
+
     <div class="container" style="margin-top:5rem;">
       <div class="row">
         <div class="charts col-xs-36 col-sm-24 col-md-18 col-lg-10 ">
-         <canvas id="myChart"></canvas>
+          <canvas id="myChart"></canvas>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4  order-xs-first order-sm-first order-md-first order-lg-last" style="top: 4rem;">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4  order-xs-first order-sm-first order-md-first order-lg-last"
+          style="top: 4rem;">
           <div id="painelAmostras" class="card mb-4 ">
             <div class="card card-header ">
               <h5>Adicionar amostra</h5>
@@ -57,7 +59,8 @@
                 <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
                   <b-card-body>
                     <b-alert show variant="info">Informe um valor para X e ele será usado para o calculo da equação.
-                      Os valores atuais das constantes M e B são respectivamente {{gradiente}} e {{interceptador}}</b-alert><br>
+                      Os valores atuais das constantes M e B são respectivamente {{gradiente}} e {{interceptador}}
+                    </b-alert><br>
                     <p>{{formula | formatoPadrao}}</p>
                     <p>f({{variavelDaFormula}}) = {{resultadoDaExpressao | redutor}}</p>
                     <b-input-group>
@@ -73,11 +76,13 @@
             <div class="col-lg-6 order-xs-3">
               <b-card no-body class="mb-2">
                 <b-card-header header-tag="header" class="p-1">
-                  <b-button block href="#" v-b-toggle.accordion-2 variant="info">Já calibrou antes ? Clique aqui !</b-button>
+                  <b-button block href="#" v-b-toggle.accordion-2 variant="info">Já calibrou antes ? Clique aqui !
+                  </b-button>
                 </b-card-header>
                 <b-collapse id="accordion-2" visible accordion="my-accordion" role="tabpanel">
                   <b-card-body>
-                    <b-alert show variant="info">Informe as constantes M e B de calibrações anteriores.</b-alert><br>
+                    <b-alert show variant="info">Informe as constantes M e B de calibrações anteriores, para reajustar
+                      os valores das amostras com as antigas calibrações</b-alert><br>
                     <b-input-group>
                       <b-input-group-text slot="prepend" prepend="Label">M
                       </b-input-group-text>
@@ -100,7 +105,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th style="margin-right:19rem;">
+                    <th>
                       <h5><b>Garten</b></h5>
                     </th>
                     <th>
@@ -127,6 +132,13 @@
         </div>
       </div>
     </div>
+    <footer style="margin-top:5rem; background-color:#343A40">
+      <div class="text-center py-3">
+        <font color="white">
+         © 2019 Garten - Automação - Todos os direitos reservados
+        </font>
+      </div>
+    </footer>
   </div>
 </template>
 <script>
@@ -142,10 +154,13 @@
   import ChartScript from '../../utils/Chart/ChartScript.js';
   import Calculadora from '../../utils/CalculadoraDeRegressao/Calculadora.js'
   import Conversor from '../../utils/Conversor/Conversor.js'
+
   Vue.use(Toasted);
   var myChart = null;
+  var regressao;
+
   var atualizaGrafico = function (vm, chart) {
-    let regressao = Calculadora(vm);
+    regressao = Calculadora(vm);
     let valores = regressao.getValores();
     let variavelFloat = parseFloat(vm.variavelDaFormula);
     if (!isNaN(variavelFloat)) {
@@ -156,6 +171,7 @@
     chart.data.datasets[2].data = vm.valuesDesabilitados;
     chart.update()
   }
+
   export default {
     data() {
       return {
@@ -200,17 +216,20 @@
       }
       window.myChart = myChart
       this.toastIt(this, 'info');
+
     },
     updated() {
-      atualizaGrafico(this, myChart);
+        atualizaGrafico(this, myChart);
+
+        this.gradiente = regressao.gradiente;
+        this.interceptador = regressao.interceptador;
+
+
     },
     watch: {
       values() {
         let regressao = Calculadora(this);
         localStorage.setItem("valuesDB", JSON.stringify(this.values));
-        
-        this.gradiente = regressao.getGradiente() ;
-        isNaN(regressao.getInterceptador())  ?  this.interceptador = '0' : this.interceptador = regressao.getInterceptador();
       }
     },
     methods: {
@@ -281,7 +300,7 @@
           //Linhas
           var headers = {
             x: 'Garten',
-            y: 'Laboratório',
+            y: 'Lab',
             formula: 'Formula : ' + this.formula
           };
           //Colunas
@@ -493,7 +512,14 @@
       },
       formatoPadrao: function (formato) {
         return formato.includes("NaN") ? "y = m * x + b" : formato;
+      },
+      getM: function (formula) {
+        let splited = formula.split('');
+      },
+      getB: function (formula) {
+
       }
+
     }
   }
 </script>

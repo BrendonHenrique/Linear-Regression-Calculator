@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "start": "node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
@@ -17,10 +18,13 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.16",
     "chart.js": "^2.8.0",
+    "express": "^4.16.4",
+    "heroku": "^7.22.9",
     "jquery": "^3.3.1",
     "jspdf": "^1.5.3",
     "popper.js": "^1.14.7",
     "regression": "^2.0.1",
+    "serve-static": "^1.13.2",
     "vue": "^2.6.10",
     "vue-router": "^2.8.1",
     "vue-toasted": "^1.1.26"

@@ -16,4 +16,8 @@ npm run dev
 npm run build
 ```
 
+![Gif](https://raw.githubusercontent.com/BrendonHenrique/Linear-Regression-Calculator/master/Peek%20v1.gif)
+
+
+
 

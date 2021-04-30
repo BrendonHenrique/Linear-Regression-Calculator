@@ -21,7 +21,7 @@
     "express": "^4.16.4",
     "heroku": "^7.22.9",
     "jquery": "^3.3.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "popper.js": "^1.14.7",
     "regression": "^2.0.1",
     "serve-static": "^1.13.2",
